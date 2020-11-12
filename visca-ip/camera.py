@@ -5,4 +5,4 @@ class Camera:
         self.port = port
 
     def init_connection(self):
-        
+        pass
