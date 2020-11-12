@@ -85,3 +85,12 @@ class Focus:
     @staticmethod
     def focusNearLimit(position):
         pass
+
+class AutoFocus:
+    @staticmethod
+    def setNormalSensitivity():
+        pass
+
+    @staticmethod
+    def setLowSensivity():
+        pass
