@@ -88,9 +88,18 @@ class Focus:
 
 class AutoFocus:
     @staticmethod
-    def setNormalSensitivity():
+    def normalSensitivity():
         pass
 
     @staticmethod
-    def setLowSensivity():
+    def lowSensivity():
         pass
+
+    @staticmethod
+    def normalMode():
+        pass
+
+    @staticmethod
+    def intervalMode():
+        pass
+    
