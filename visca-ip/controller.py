@@ -6,7 +6,11 @@ class Controller:
         self.ip = ip
         self.port = port
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Timeout when receiving data
+        self.connection.settimeout(2.0)
+        # Buffer size for receiving data
         self.recv_buffsize = 1024
+        # The camera needs every command sent to it to be numbered
         self.command_number = 0
 
     def _getCommandNumber(self):
@@ -20,7 +24,10 @@ class Controller:
         command_number = self._getCommandNumber().to_bytes(4, 'big')
         command = command_type + command_length + command_number + command_body
         self.connection.sendto(command, (self.ip, self.port))
-        response = self.connection.recvfrom(self.recv_buffsize)
+        try:
+            response = self.connection.recvfrom(self.recv_buffsize)
+        except TimeoutError:
+            raise TimeoutError("Camera took too long to respond")
         return binascii.hexlify(response[0])
 
     def powerOn(self):
@@ -56,3 +63,16 @@ class Controller:
                 return self._send_to_cam(hex_command)
             else:
                 raise ValueError("Zoom speed must be between 0 and 7")
+    
+    def zoomSet(self, position):
+        if (0 <= position <= 16384):
+            # The '[2:]' removes '0x' from the beginning of the hex string
+            hex_position = hex(position)[2:]
+            s = hex_position[len(hex_position) - 1]
+            r = hex_position[len(hex_position) - 2] or "0"
+            q = hex_position[len(hex_position) - 3] or "0"
+            p = hex_position[len(hex_position) - 4] or "0"
+            hex_command = f"81 01 04 47 0{p} 0{q} 0{r} 0{s} FF"
+            return self._send_to_cam(hex_command)
+        else:
+            raise ValueError("Zoom position must be between 0 and 16384")
