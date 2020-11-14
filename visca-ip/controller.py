@@ -6,6 +6,7 @@ class Controller:
         self.ip = ip
         self.port = port
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.recv_buffsize = 1024
         self.command_number = 0
 
     def _getCommandNumber(self):
@@ -19,6 +20,8 @@ class Controller:
         command_number = self._getCommandNumber().to_bytes(4, 'big')
         command = command_type + command_length + command_number + command_body
         self.connection.sendto(command, (self.ip, self.port))
+        response = self.connection.recvfrom(self.recv_buffsize)
+        return binascii.hexlify(response[0])
 
     def powerOn(self):
         hex_command = "81 01 04 00 02 FF"
@@ -37,13 +40,19 @@ class Controller:
             hex_command = "81 01 04 07 02 FF"
             return self._send_to_cam(hex_command)
         else:
-            hex_command = f"81 01 04 07 2{speed} FF"
-            return self._send_to_cam(hex_command)
+            if (0 <= speed <= 7):
+                hex_command = f"81 01 04 07 2{speed} FF"
+                return self._send_to_cam(hex_command)
+            else:
+                raise ValueError("Zoom speed must be between 0 and 7")
 
     def zoomOut(self, speed = None):
         if speed is None:
             hex_command = "81 01 04 07 03 FF"
             return self._send_to_cam(hex_command)
         else:
-            hex_command = f"81 01 04 07 3{speed} FF"
-            return self._send_to_cam(hex_command)
+            if (0 <= speed <= 7):
+                hex_command = f"81 01 04 07 3{speed} FF"
+                return self._send_to_cam(hex_command)
+            else:
+                raise ValueError("Zoom speed must be between 0 and 7")
