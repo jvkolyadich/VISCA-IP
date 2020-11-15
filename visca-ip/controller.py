@@ -1,6 +1,6 @@
+from viscaexceptions import *
 import socket
 import binascii
-import viscaexceptions
 
 class Controller:
     def __init__(self, ip, port = 52381):
@@ -52,7 +52,7 @@ class Controller:
                 hex_command = f"81 01 04 07 2{speed} FF"
                 return self._send_to_cam(hex_command)
             else:
-                raise viscaexceptions.ZoomSpeedError
+                raise ZoomSpeedError
 
     def zoomOut(self, speed = None):
         if speed is None:
@@ -63,7 +63,7 @@ class Controller:
                 hex_command = f"81 01 04 07 3{speed} FF"
                 return self._send_to_cam(hex_command)
             else:
-                raise viscaexceptions.ZoomSpeedError
+                raise ZoomSpeedError
     
     def zoomSet(self, position):
         if (0 <= position <= 16384):
@@ -76,7 +76,7 @@ class Controller:
             hex_command = f"81 01 04 47 0{p} 0{q} 0{r} 0{s} FF"
             return self._send_to_cam(hex_command)
         else:
-            raise viscaexceptions.ZoomPositionError
+            raise ZoomPositionError
     
     def moveStop(self):
         hex_command = "81 01 06 01 00 00 03 03 FF"
@@ -88,7 +88,7 @@ class Controller:
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 03 01 FF"
             return self._send_to_cam(hex_command)
         else:
-            raise viscaexceptions.MoveSpeedError
+            raise MoveSpeedError
 
     def moveDown(self, speed):
         if (1 <= speed <= 17):
@@ -96,7 +96,7 @@ class Controller:
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 03 02 FF"
             return self._send_to_cam(hex_command)
         else:
-            raise viscaexceptions.MoveSpeedError
+            raise MoveSpeedError
 
     def moveLeft(self, speed):
         if (1 <= speed <= 17):
@@ -104,12 +104,48 @@ class Controller:
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 03 FF"
             return self._send_to_cam(hex_command)
         else:
-            raise viscaexceptions.MoveSpeedError
+            raise MoveSpeedError
 
     def moveRight(self, speed):
         if (1 <= speed <= 17):
             hex_speed = hex(speed)[2:]
-            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 02 FF"
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 03 FF"
             return self._send_to_cam(hex_command)
         else:
-            raise viscaexceptions.MoveSpeedError
+            raise MoveSpeedError
+
+    def moveUpLeft(self, speed):
+        if (1 <= speed <= 17):
+            hex_speed = hex(speed)[2:]
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 01 FF"
+            return self._send_to_cam(hex_command)
+        else:
+            raise MoveSpeedError
+
+    def moveUpRight(self, speed):
+        if (1 <= speed <= 17):
+            hex_speed = hex(speed)[2:]
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 01 FF"
+            return self._send_to_cam(hex_command)
+        else:
+            raise MoveSpeedError
+
+    def moveDownLeft(self, speed):
+        if (1 <= speed <= 17):
+            hex_speed = hex(speed)[2:]
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 01 FF"
+            return self._send_to_cam(hex_command)
+        else:
+            raise MoveSpeedError
+
+    def moveDownRight(self, speed):
+        if (1 <= speed <= 17):
+            hex_speed = hex(speed)[2:]
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 02 FF"
+            return self._send_to_cam(hex_command)
+        else:
+            raise MoveSpeedError
+    
+    def moveToCenter(self):
+        hex_command = "81 01 06 04 FF"
+        return self._send_to_cam(hex_command)
