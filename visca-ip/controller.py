@@ -1,4 +1,4 @@
-from viscaexceptions import *
+from .viscaexceptions import *
 import socket
 import binascii
 
