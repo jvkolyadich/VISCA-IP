@@ -27,7 +27,7 @@ class Controller:
         self.connection.sendto(command, (self.ip, self.port))
         try:
             response = self.connection.recvfrom(self.recv_buffsize)
-        except TimeoutError:
+        except socket.timeout:
             raise TimeoutError("Camera took too long to respond")
         return binascii.hexlify(response[0])
 
