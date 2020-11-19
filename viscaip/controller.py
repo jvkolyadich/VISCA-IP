@@ -31,8 +31,7 @@ class Controller:
         return binascii.hexlify(response[0]).hex()
 
     def _intToHex(self, number):
-        # The '[2:]' removes '0x' from the beginning of the hex string
-        return hex(number)[2:]
+        return number.to_bytes(2, byteorder='big', signed=True).hex()
 
     def _zoomPositionValid(self, position):
         if (0 <= position <= 16384):
@@ -51,6 +50,18 @@ class Controller:
             return True
         else:
             raise MoveSpeedError
+
+    def _panPosValid(self, pos):
+        if (-7707 <= pos <= 7707):
+            return True
+        else:
+            raise PanPosError
+
+    def _tiltPosValid(self, pos):
+        if (1 <= pos <= 3):
+            return True
+        else:
+            raise TiltPosError
 
     def powerOn(self):
         hex_command = "81 01 04 00 02 FF"
@@ -87,9 +98,9 @@ class Controller:
             hex_position = self._intToHex(position)
             # Splits a 4-character hex number into 4 different variables
             s = hex_position[len(hex_position) - 1]
-            r = hex_position[len(hex_position) - 2] or "0"
-            q = hex_position[len(hex_position) - 3] or "0"
-            p = hex_position[len(hex_position) - 4] or "0"
+            r = hex_position[len(hex_position) - 2]
+            q = hex_position[len(hex_position) - 3]
+            p = hex_position[len(hex_position) - 4]
             hex_command = f"81 01 04 47 0{p} 0{q} 0{r} 0{s} FF"
             return self._sendToCam(hex_command)
     
@@ -148,3 +159,12 @@ class Controller:
     def moveToCenter(self):
         hex_command = "81 01 06 04 FF"
         return self._sendToCam(hex_command)
+
+    def moveToAbsolute(self, speed, pan_pos, tilt_pos):
+        if (self._moveSpeedValid(speed) and
+            self._panPosValid(pan_pos) and
+            self._tiltPosValid(tilt_pos)):
+
+            hex_speed = self._intToHex(speed)
+            
+        
