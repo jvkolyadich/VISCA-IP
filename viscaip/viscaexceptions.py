@@ -20,5 +20,6 @@ class PanPosError(BaseException):
 
 class TiltPosError(BaseException):
     def __init__(self):
-        self.message = "Tilt position must be between x and y"
+        self.message = '''Tilt position must be between -907 and 4080 (image flip off)
+        or -4080 and 907 (image flip on). 0000 is the center'''
         super().__init__(self.message)

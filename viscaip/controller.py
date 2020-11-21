@@ -1,4 +1,4 @@
-from .viscaexceptions import *
+#from .viscaexceptions import *
 import socket
 import binascii
 
@@ -58,7 +58,7 @@ class Controller:
             raise PanPosError
 
     def _tiltPosValid(self, pos):
-        if (1 <= pos <= 3):
+        if (-4080 <= pos <= 4080):
             return True
         else:
             raise TiltPosError
@@ -95,13 +95,8 @@ class Controller:
     
     def zoomSet(self, position):
         if (self._zoomPositionValid(position)):
-            hex_position = self._intToHex(position)
-            # Splits a 4-character hex number into 4 different variables
-            s = hex_position[len(hex_position) - 1]
-            r = hex_position[len(hex_position) - 2]
-            q = hex_position[len(hex_position) - 3]
-            p = hex_position[len(hex_position) - 4]
-            hex_command = f"81 01 04 47 0{p} 0{q} 0{r} 0{s} FF"
+            hex_pos = self._intToHex(position)
+            hex_command = f"81 01 04 47 0{hex_pos[0]} 0{hex_pos[1]} 0{hex_pos[2]} 0{hex_pos[3]} FF"
             return self._sendToCam(hex_command)
     
     def moveStop(self):
@@ -162,9 +157,10 @@ class Controller:
 
     def moveToAbsolute(self, speed, pan_pos, tilt_pos):
         if (self._moveSpeedValid(speed) and
-            self._panPosValid(pan_pos) and
-            self._tiltPosValid(tilt_pos)):
-
+        self._panPosValid(pan_pos) and
+        self._tiltPosValid(tilt_pos)):
             hex_speed = self._intToHex(speed)
-            
-        
+            hex_pan_pos = self._intToHex(pan_pos)
+            hex_tilt_pos = self._intToHex(tilt_pos)
+            hex_command = f"81 01 06 02 {hex_speed} {hex_speed} 0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} 0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
+            return self._sendToCam(hex_command)
