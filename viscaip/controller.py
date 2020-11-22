@@ -1,4 +1,4 @@
-#from .viscaexceptions import *
+from .viscaexceptions import *
 import socket
 import binascii
 
@@ -162,5 +162,8 @@ class Controller:
             hex_speed = self._intToHex(speed)
             hex_pan_pos = self._intToHex(pan_pos)
             hex_tilt_pos = self._intToHex(tilt_pos)
-            hex_command = f"81 01 06 02 {hex_speed} {hex_speed} 0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} 0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
+            hex_command = f"81 01 06 02 "
+            f"{hex_speed} {hex_speed} "
+            f"0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} "
+            f"0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
             return self._sendToCam(hex_command)
