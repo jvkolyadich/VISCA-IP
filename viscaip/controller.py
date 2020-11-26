@@ -23,15 +23,18 @@ class Controller:
         command_number = self._getCommandNumber().to_bytes(4, 'big')
         command = command_type + command_length + command_number + command_body
         self.connection.sendto(command, (self.ip, self.port))
+        '''
         try:
             # 1024 is the buffer size for receiving data
             response = self.connection.recvfrom(1024)
+            return binascii.hexlify(response[0]).hex()
         except socket.timeout:
-            raise TimeoutError("Camera took too long to respond")
-        return binascii.hexlify(response[0]).hex()
+            return None
+        '''
+        return None
 
-    def _intToHex(self, number):
-        return number.to_bytes(2, byteorder='big', signed=True).hex()
+    def _intToHex(self, number, size = 1):
+        return number.to_bytes(size, byteorder='big', signed=True).hex()
 
     def _zoomPositionValid(self, position):
         if (0 <= position <= 16384):
@@ -52,7 +55,7 @@ class Controller:
             raise MoveSpeedError
 
     def _panPosValid(self, pos):
-        if (-7707 <= pos <= 7707):
+        if (-1660 <= pos <= 1660):
             return True
         else:
             raise PanPosError
@@ -95,7 +98,7 @@ class Controller:
     
     def zoomSet(self, position):
         if (self._zoomPositionValid(position)):
-            hex_pos = self._intToHex(position)
+            hex_pos = self._intToHex(position, 2)
             hex_command = f"81 01 04 47 0{hex_pos[0]} 0{hex_pos[1]} 0{hex_pos[2]} 0{hex_pos[3]} FF"
             return self._sendToCam(hex_command)
     
@@ -160,10 +163,8 @@ class Controller:
         self._panPosValid(pan_pos) and
         self._tiltPosValid(tilt_pos)):
             hex_speed = self._intToHex(speed)
-            hex_pan_pos = self._intToHex(pan_pos)
-            hex_tilt_pos = self._intToHex(tilt_pos)
-            hex_command = f"81 01 06 02 "
-            f"{hex_speed} {hex_speed} "
-            f"0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} "
-            f"0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
+            hex_pan_pos = self._intToHex(pan_pos, 2)
+            hex_tilt_pos = self._intToHex(tilt_pos, 2)
+            hex_command = f"81 01 06 02 {hex_speed} {hex_speed} 0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} 0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
+            print(hex_command)
             return self._sendToCam(hex_command)

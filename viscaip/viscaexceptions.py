@@ -15,11 +15,10 @@ class MoveSpeedError(BaseException):
 
 class PanPosError(BaseException):
     def __init__(self):
-        self.message = "Pan position must be between -7707 and 7707"
+        self.message = "Pan position must be between -1660 and 1660"
         super().__init__(self.message)
 
 class TiltPosError(BaseException):
     def __init__(self):
-        self.message = '''Tilt position must be between -907 and 4080 (image flip off)
-        or -4080 and 907 (image flip on). 0000 is the center'''
+        self.message = "Tilt position must be between -374 and 1122"
         super().__init__(self.message)
