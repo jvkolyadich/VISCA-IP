@@ -61,7 +61,7 @@ class Controller:
             raise PanPosError
 
     def _tiltPosValid(self, pos):
-        if (-4080 <= pos <= 4080):
+        if (-374 <= pos <= 1122):
             return True
         else:
             raise TiltPosError
@@ -166,5 +166,4 @@ class Controller:
             hex_pan_pos = self._intToHex(pan_pos, 2)
             hex_tilt_pos = self._intToHex(tilt_pos, 2)
             hex_command = f"81 01 06 02 {hex_speed} {hex_speed} 0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} 0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
-            print(hex_command)
             return self._sendToCam(hex_command)
