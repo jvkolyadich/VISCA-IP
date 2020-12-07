@@ -20,8 +20,11 @@ class MainWindow:
                     "BIDqyH7YG0C/KBI9jnKQHEu6wmrOB4zI4mYet5FsBwDrAF4KMAxPd5L0w"\
                     "XwCWJEn8BTQae7e2JIXhnMdgAAAAASUVORK5CYII="
         self.root.iconphoto(False, PhotoImage(data=self.icon))
+        
 
-        power_frame = Frame(self.root)
+        main_frame = Frame(self.root)
+
+        power_frame = Frame(main_frame)
 
         turn_on = Button(power_frame, text="Turn on", command=self.cam.powerOn)
         turn_on.grid(row=1, column=1)
@@ -31,8 +34,7 @@ class MainWindow:
 
         power_frame.pack(side=TOP, padx=15, pady=15)
 
-
-        pt_frame = Frame(self.root)
+        pt_frame = Frame(main_frame)
 
         up_left = Button(pt_frame, text="↖", width=2)
         up_left.bind("<ButtonPress>", lambda _: self.cam.moveUpLeft(self.move_speed))
@@ -79,6 +81,8 @@ class MainWindow:
         down_right.grid(row=3, column=3)
 
         pt_frame.pack(side=TOP, padx=15, pady=15)
+        
+        main_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
     def run(self):
         self.root.mainloop()
