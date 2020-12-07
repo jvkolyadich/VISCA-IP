@@ -6,6 +6,7 @@ class MainWindow:
     def __init__(self):
 
         self.cam = Controller("192.168.1.129")
+        self.move_speed = 7
         
         self.root = Tk()
         self.root.title("VISCA-IP")
@@ -29,6 +30,55 @@ class MainWindow:
         turn_off.grid(row=1, column=2)
 
         power_frame.pack(side=TOP, padx=15, pady=15)
+
+
+        pt_frame = Frame(self.root)
+
+        up_left = Button(pt_frame, text="↖", width=2)
+        up_left.bind("<ButtonPress>", lambda _: self.cam.moveUpLeft(self.move_speed))
+        up_left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        up_left.grid(row=1, column=1)
+
+        up = Button(pt_frame, text="↑", width=2)
+        up.bind("<ButtonPress>", lambda _: self.cam.moveUp(self.move_speed))
+        up.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        up.grid(row=1, column=2)
+
+        up_right = Button(pt_frame, text="↗", width=2)
+        up_right.bind("<ButtonPress>", lambda _: self.cam.moveUpRight(self.move_speed))
+        up_right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        up_right.grid(row=1, column=3)
+
+        left = Button(pt_frame, text="←", width=2)
+        left.bind("<ButtonPress>", lambda _: self.cam.moveLeft(self.move_speed))
+        left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        left.grid(row=2, column=1)
+
+        stop = Button(pt_frame, text="■", width=2)
+        stop.bind("<ButtonPress>", lambda _: self.cam.moveStop())
+        stop.grid(row=2, column=2)
+
+        right = Button(pt_frame, text="→", width=2)
+        right.bind("<ButtonPress>", lambda _: self.cam.moveRight(self.move_speed))
+        right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        right.grid(row=2, column=3)
+
+        down_left = Button(pt_frame, text="↙", width=2)
+        down_left.bind("<ButtonPress>", lambda _: self.cam.moveDownLeft(self.move_speed))
+        down_left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        down_left.grid(row=3, column=1)
+
+        down = Button(pt_frame, text="↓", width=2)
+        down.bind("<ButtonPress>", lambda _: self.cam.moveDown(self.move_speed))
+        down.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        down.grid(row=3, column=2)
+
+        down_right = Button(pt_frame, text="↘", width=2)
+        down_right.bind("<ButtonPress>", lambda _: self.cam.moveDownRight(self.move_speed))
+        down_right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
+        down_right.grid(row=3, column=3)
+
+        pt_frame.pack(side=TOP, padx=15, pady=15)
 
     def run(self):
         self.root.mainloop()
