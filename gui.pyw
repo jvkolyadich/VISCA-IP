@@ -32,27 +32,43 @@ class MainWindow:
         turn_off = Button(power_frame, text="Turn off", command=self.cam.powerOff)
         turn_off.grid(row=1, column=2)
 
-        power_frame.pack(side=TOP, padx=15, pady=15)
+        power_frame.grid(row=1, column=1, columnspan=2, padx=15, pady=15)
+
+        move_speed_frame = Frame(main_frame)
+
+        move_speed_label = Label(move_speed_frame, text="Movement speed:")
+        move_speed_label.grid(row=1, column=1)
+
+        move_speed_val = StringVar()
+        move_speed_val.set("8")
+
+        move_speed_info = Label(move_speed_frame, textvariable=move_speed_val)
+        move_speed_info.grid(row=2, column=1)
+
+        move_speed = Scale(move_speed_frame, orient=VERTICAL, from_=17, to=1, value=8, command=lambda val: move_speed_val.set(int(float(val))))
+        move_speed.grid(row=3, column=1)
+
+        move_speed_frame.grid(row=2, column=1, padx=15, pady=15)
 
         pt_frame = Frame(main_frame)
 
         up_left = Button(pt_frame, text="↖", width=2)
-        up_left.bind("<ButtonPress>", lambda _: self.cam.moveUpLeft(self.move_speed))
+        up_left.bind("<ButtonPress>", lambda _: self.cam.moveUpLeft(int(move_speed_val.get())))
         up_left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         up_left.grid(row=1, column=1)
 
         up = Button(pt_frame, text="↑", width=2)
-        up.bind("<ButtonPress>", lambda _: self.cam.moveUp(self.move_speed))
+        up.bind("<ButtonPress>", lambda _: self.cam.moveUp(int(move_speed_val.get())))
         up.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         up.grid(row=1, column=2)
 
         up_right = Button(pt_frame, text="↗", width=2)
-        up_right.bind("<ButtonPress>", lambda _: self.cam.moveUpRight(self.move_speed))
+        up_right.bind("<ButtonPress>", lambda _: self.cam.moveUpRight(int(move_speed_val.get())))
         up_right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         up_right.grid(row=1, column=3)
 
         left = Button(pt_frame, text="←", width=2)
-        left.bind("<ButtonPress>", lambda _: self.cam.moveLeft(self.move_speed))
+        left.bind("<ButtonPress>", lambda _: self.cam.moveLeft(int(move_speed_val.get())))
         left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         left.grid(row=2, column=1)
 
@@ -61,26 +77,26 @@ class MainWindow:
         stop.grid(row=2, column=2)
 
         right = Button(pt_frame, text="→", width=2)
-        right.bind("<ButtonPress>", lambda _: self.cam.moveRight(self.move_speed))
+        right.bind("<ButtonPress>", lambda _: self.cam.moveRight(int(move_speed_val.get())))
         right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         right.grid(row=2, column=3)
 
         down_left = Button(pt_frame, text="↙", width=2)
-        down_left.bind("<ButtonPress>", lambda _: self.cam.moveDownLeft(self.move_speed))
+        down_left.bind("<ButtonPress>", lambda _: self.cam.moveDownLeft(int(move_speed_val.get())))
         down_left.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         down_left.grid(row=3, column=1)
 
         down = Button(pt_frame, text="↓", width=2)
-        down.bind("<ButtonPress>", lambda _: self.cam.moveDown(self.move_speed))
+        down.bind("<ButtonPress>", lambda _: self.cam.moveDown(int(move_speed_val.get())))
         down.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         down.grid(row=3, column=2)
 
         down_right = Button(pt_frame, text="↘", width=2)
-        down_right.bind("<ButtonPress>", lambda _: self.cam.moveDownRight(self.move_speed))
+        down_right.bind("<ButtonPress>", lambda _: self.cam.moveDownRight(int(move_speed_val.get())))
         down_right.bind("<ButtonRelease>", lambda _: self.cam.moveStop())
         down_right.grid(row=3, column=3)
 
-        pt_frame.pack(side=TOP, padx=15, pady=15)
+        pt_frame.grid(row=2, column=2, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
