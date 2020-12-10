@@ -145,7 +145,7 @@ class Controller:
     def moveDownLeft(self, speed):
         if (self._moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
-            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 01 FF"
+            hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 02 FF"
             return self._sendToCam(hex_command)
 
     def moveDownRight(self, speed):
