@@ -58,13 +58,19 @@ class Controller:
         if (-1660 <= pos <= 1660):
             return True
         else:
-            raise PanPosError
+            raise PanPositionError
 
     def _tiltPosValid(self, pos):
         if (-374 <= pos <= 1122):
             return True
         else:
-            raise TiltPosError
+            raise TiltPostionError
+
+    def _presetValid(self, preset):
+        if (1 <= preset <= 9):
+            return True
+        else:
+            raise PresetError
 
     def powerOn(self):
         hex_command = "81 01 04 00 02 FF"
@@ -95,17 +101,17 @@ class Controller:
             if (self._zoomSpeedValid(speed)):
                 hex_command = f"81 01 04 07 3{speed} FF"
                 return self._sendToCam(hex_command)
-    
+
     def zoomSet(self, position):
         if (self._zoomPositionValid(position)):
             hex_pos = self._intToHex(position, 2)
             hex_command = f"81 01 04 47 0{hex_pos[0]} 0{hex_pos[1]} 0{hex_pos[2]} 0{hex_pos[3]} FF"
             return self._sendToCam(hex_command)
-    
+
     def moveStop(self):
         hex_command = "81 01 06 01 00 00 03 03 FF"
         return self._sendToCam(hex_command)
-    
+
     def moveUp(self, speed):
         if (self._moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
@@ -153,7 +159,7 @@ class Controller:
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 02 FF"
             return self._sendToCam(hex_command)
-    
+
     def moveToCenter(self):
         hex_command = "81 01 06 04 FF"
         return self._sendToCam(hex_command)
@@ -166,4 +172,22 @@ class Controller:
             hex_pan_pos = self._intToHex(pan_pos, 2)
             hex_tilt_pos = self._intToHex(tilt_pos, 2)
             hex_command = f"81 01 06 02 {hex_speed} {hex_speed} 0{hex_pan_pos[0]} 0{hex_pan_pos[1]} 0{hex_pan_pos[2]} 0{hex_pan_pos[3]} 0{hex_tilt_pos[0]} 0{hex_tilt_pos[1]} 0{hex_tilt_pos[2]} 0{hex_tilt_pos[3]} FF"
+            return self._sendToCam(hex_command)
+
+    def presetReset(self, preset):
+        if (self._presetValid(preset)):
+            hex_preset = self._intToHex(preset)
+            hex_command = f"81 01 04 3F 00 {hex_preset} FF"
+            return self._sendToCam(hex_command)
+
+    def presetSet(self, preset):
+        if (self._presetValid(preset)):
+            hex_preset = self._intToHex(preset)
+            hex_command = f"81 01 04 3F 01 {hex_preset} FF"
+            return self._sendToCam(hex_command)
+
+    def presetRecall(self, preset):
+        if (self._presetValid(preset)):
+            hex_preset = self._intToHex(preset)
+            hex_command = f"81 01 04 3F 02 {hex_preset} FF"
             return self._sendToCam(hex_command)
