@@ -175,8 +175,12 @@ class MainWindow:
 
         new_preset_name_input = Entry(presets_form_frame)
         new_preset_name_input.grid(row=3, column=1, columnspan=3)
+        
+        def addPreset():
+            name = new_preset_name_input.get()
+            GuiPreset(name)
 
-        new_preset_button = Button(presets_form_frame, text="Add preset")
+        new_preset_button = Button(presets_form_frame, text="Add preset", command=addPreset)
         new_preset_button.grid(row=3, column=4)
 
         presets_form_frame.grid(row=4, column=1, columnspan=4, pady=10)
@@ -185,12 +189,18 @@ class MainWindow:
 
         class GuiPreset():
             def __init__(self, name):
-                self.button = Button(presets_button_frame, text=name)
-                self.delete_button = Button(presets_button_frame, text="Remove")
+                self.frame = Frame(presets_button_frame)
+                self.button = Button(self.frame, text=name)
+                self.delete_button = Button(self.frame, text="Remove", command=self.delete())
+                self.button.grid(row=1, column=1)
+                self.delete_button.grid(row=1, column=2)
+                self.frame.pack(side=tk.TOP)
+            
+            def delete():
+                self.frame.destroy()
 
         presets_buttons_frame.grid(row=3, column=1, columnspan=4, pady=10)
                 
-
         presets_frame.grid(row=4, column=1, columnspan=3, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
