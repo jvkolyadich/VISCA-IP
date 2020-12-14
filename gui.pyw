@@ -87,7 +87,7 @@ class MainWindow:
         stop_move_on_release = tk.BooleanVar(pt_frame, True)
 
         class PTButton(Button):
-            def __init__(self, master=pt_frame, size=20, **kwargs):
+            def __init__(self, master=pt_frame, size=30, **kwargs):
                 self.img = tk.PhotoImage()
                 tk.Button.__init__(self, master, image=self.img, compound=tk.CENTER, width=size, height=size, **kwargs)
 
@@ -189,14 +189,14 @@ class MainWindow:
 
         class GuiPreset():
             def __init__(self, name):
-                self.frame = Frame(presets_button_frame)
+                self.frame = Frame(presets_buttons_frame)
                 self.button = Button(self.frame, text=name)
-                self.delete_button = Button(self.frame, text="Remove", command=self.delete())
+                self.delete_button = Button(self.frame, text="Remove", command=self.delete)
                 self.button.grid(row=1, column=1)
                 self.delete_button.grid(row=1, column=2)
                 self.frame.pack(side=tk.TOP)
             
-            def delete():
+            def delete(self):
                 self.frame.destroy()
 
         presets_buttons_frame.grid(row=3, column=1, columnspan=4, pady=10)
