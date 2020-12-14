@@ -10,7 +10,7 @@ class MainWindow:
         
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
-        self.root.geometry("380x320")
+        self.root.geometry("380x500")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
                     "+2WSxLCIAxA6RncuvRCXIWDcBUu5NKtZ9CBMQ4EAklKbR3trlPa9/IhZT"\
                     "E7X8vOfPO1Ag8ic+KAJC9QUKqKrG9zFknBWKjLGAmshYMMyekJqOH38yW"\
@@ -156,6 +156,42 @@ class MainWindow:
         stop_move_label.grid(row=2, column=2)
 
         options_frame.grid(row=3, column=1, columnspan=3, padx=15, pady=15)
+
+        presets_frame = Frame(main_frame)
+
+        presets_label = Label(presets_frame, text="Presets:")
+        presets_label.grid(row=1, column=1, columnspan=4, pady=10)
+
+        load_presets_button = Button(presets_frame, text="Load presets")
+        load_presets_button.grid(row=2, column=1, columnspan=2)
+
+        export_presets_button = Button(presets_frame, text="Export presets")
+        export_presets_button.grid(row=2, column=3, columnspan=2)
+
+        presets_form_frame = Frame(presets_frame)
+
+        new_preset_label = Label(presets_form_frame, text="New preset:")
+        new_preset_label.grid(row=1, column=1, columnspan=4)
+
+        new_preset_name_input = Entry(presets_form_frame)
+        new_preset_name_input.grid(row=3, column=1, columnspan=3)
+
+        new_preset_button = Button(presets_form_frame, text="Add preset")
+        new_preset_button.grid(row=3, column=4)
+
+        presets_form_frame.grid(row=4, column=1, columnspan=4, pady=10)
+
+        presets_buttons_frame = Frame(presets_frame)
+
+        class GuiPreset():
+            def __init__(self, name):
+                self.button = Button(presets_button_frame, text=name)
+                self.delete_button = Button(presets_button_frame, text="Remove")
+
+        presets_buttons_frame.grid(row=3, column=1, columnspan=4, pady=10)
+                
+
+        presets_frame.grid(row=4, column=1, columnspan=3, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
