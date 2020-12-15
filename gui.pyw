@@ -5,7 +5,7 @@ from viscaip.controller import Controller
 class MainWindow:
     def __init__(self):
 
-        self.cam = Controller("192.168.1.129")
+        self.cam = Controller("127.0.0.1")
         self.move_speed = 7
         
         self.root = tk.Tk()
