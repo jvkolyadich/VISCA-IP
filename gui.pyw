@@ -208,7 +208,7 @@ class MainWindow:
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         self.root.update()
-        self.root.minsize(main_frame.winfo_width()+10, main_frame.winfo_height())
+        self.root.minsize(main_frame.winfo_width()+20, main_frame.winfo_height())
 
     def run(self):
         self.root.mainloop()
