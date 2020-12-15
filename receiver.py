@@ -9,4 +9,4 @@ while True:
     response = connection.recvfrom(1024)
     response = str(binascii.hexlify(response[0]))
     response = ' '.join(response[i:i+2] for i in range(2, len(response)-1, 2))
-    print(response)
+    print(response.upper())

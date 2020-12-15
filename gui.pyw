@@ -10,7 +10,6 @@ class MainWindow:
         
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
-        #self.root.geometry("380x650")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
                     "+2WSxLCIAxA6RncuvRCXIWDcBUu5NKtZ9CBMQ4EAklKbR3trlPa9/IhZT"\
                     "E7X8vOfPO1Ag8ic+KAJC9QUKqKrG9zFknBWKjLGAmshYMMyekJqOH38yW"\
@@ -182,7 +181,6 @@ class MainWindow:
                     self.cam.presetRecall(self.num)
 
         preset_rows = 8
-
         preset_num = 1
         for i in range(preset_rows):
             for j in range(3):
