@@ -10,7 +10,7 @@ class MainWindow:
         
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
-        self.root.geometry("380x500")
+        #self.root.geometry("380x650")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
                     "+2WSxLCIAxA6RncuvRCXIWDcBUu5NKtZ9CBMQ4EAklKbR3trlPa9/IhZT"\
                     "E7X8vOfPO1Ag8ic+KAJC9QUKqKrG9zFknBWKjLGAmshYMMyekJqOH38yW"\
@@ -164,28 +164,51 @@ class MainWindow:
 
         presets_frame = Frame(presets_section_frame)
 
+        should_set = tk.BooleanVar(presets_section_frame, False)
+
         class Preset():
             def __init__(self, cam, preset_num, name):
                 self.cam = cam
                 self.num = preset_num
                 self.name = tk.StringVar(value=name)
-                self.button = Button(presets_frame, textvariable=self.name, command=self.call_preset)
+                self.button = Button(presets_frame, textvariable=self.name, command=self.preset_action)
 
-            def call_preset(self):
-                self.cam.presetRecall(self.num)
+            def preset_action(self):
+                if should_set.get():
+                    self.cam.presetSet(self.num)
+                    preset_set_button.configure(background="SystemButtonFace")
+                    should_set.set(False)
+                else:
+                    self.cam.presetRecall(self.num)
+
+        preset_rows = 8
 
         preset_num = 1
-        for i in range(8):
+        for i in range(preset_rows):
             for j in range(3):
                 gui_preset = Preset(self.cam, preset_num, f"Preset {preset_num}")
                 gui_preset.button.grid(row=i+1, column=j+1)
                 preset_num += 1
+
+        def preset_set(set_button):
+            if not should_set.get():
+                set_button.configure(background="#007bd9")
+                should_set.set(True)
+            else:
+                set_button.configure(background="SystemButtonFace")
+                should_set.set(False)
+
+        preset_set_button = tk.Button(presets_frame, text="Store position", command=lambda: preset_set(preset_set_button))
+        preset_set_button.grid(row=i+2, column=1, columnspan=j+1, sticky="NESW", pady=2)
 
         presets_frame.grid(row=2, column=1, pady=10)
                 
         presets_section_frame.grid(row=4, column=1, columnspan=3, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+        self.root.update()
+        self.root.minsize(main_frame.winfo_width()+10, main_frame.winfo_height())
 
     def run(self):
         self.root.mainloop()
