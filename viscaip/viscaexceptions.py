@@ -25,5 +25,5 @@ class TiltPositionError(BaseException):
 
 class PresetError(BaseException):
     def __init__(self):
-        self.message = "Invalid preset. Only presets 1 through 250 are supported"
+        self.message = "Invalid preset. Only presets 0 through 249 are supported"
         super().__init__(self.message)

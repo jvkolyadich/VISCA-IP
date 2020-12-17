@@ -4,6 +4,7 @@ from viscaip.controller import Controller
 
 class MainWindow:
     def __init__(self):
+        self.cam = Controller('127.0.0.1')
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
@@ -24,7 +25,8 @@ class MainWindow:
         self.gui_port_var = tk.StringVar(config_frame, value="52381")
 
         def connectToCam():
-            self.cam = Controller(self.gui_ip_var.get(), self.gui_port_var.get())
+            self.cam.ip = self.gui_ip_var.get()
+            self.cam.port = int(self.gui_port_var.get())
         connectToCam()
 
         gui_ip_label = Label(config_frame, text="IP:")
@@ -202,7 +204,7 @@ class MainWindow:
                 else:
                     self.cam.presetRecall(self.num)
 
-        preset_rows = 8
+        preset_rows = 12
         preset_num = 0
         for i in range(preset_rows):
             for j in range(3):

@@ -67,7 +67,7 @@ class Controller:
             raise TiltPostionError
 
     def _presetValid(self, preset):
-        if (1 <= preset <= 250):
+        if (0 <= preset <= 249):
             return True
         else:
             raise PresetError
