@@ -4,10 +4,6 @@ from viscaip.controller import Controller
 
 class MainWindow:
     def __init__(self):
-
-        self.cam = Controller("127.0.0.1")
-        self.move_speed = 7
-        
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
@@ -22,6 +18,32 @@ class MainWindow:
 
         main_frame = Frame(self.root)
 
+        config_frame = Frame(main_frame)
+
+        self.gui_ip_var = tk.StringVar(config_frame, value="192.168.1.129")
+        self.gui_port_var = tk.StringVar(config_frame, value="52381")
+
+        def connectToCam():
+            self.cam = Controller(self.gui_ip_var.get(), self.gui_port_var.get())
+        connectToCam()
+
+        gui_ip_label = Label(config_frame, text="IP:")
+        gui_ip_label.grid(row=1, column=1)
+
+        gui_ip = Entry(config_frame, textvariable=self.gui_ip_var, width=15)
+        gui_ip.grid(row=1, column=2, columnspan=2)
+
+        gui_port_label = Label(config_frame, text="Port:")
+        gui_port_label.grid(row=2, column=1)
+
+        gui_port = Entry(config_frame, textvariable=self.gui_port_var, width=15)
+        gui_port.grid(row=2, column=2)
+
+        config_update_button = Button(config_frame, text="Reconnect", command=connectToCam)
+        config_update_button.grid(row=3, column=2)
+
+        config_frame.grid(row=1, column=1, columnspan=3, padx=15, pady=15)
+
         power_frame = Frame(main_frame)
 
         turn_on = Button(power_frame, text="Turn on", command=self.cam.powerOn)
@@ -30,7 +52,7 @@ class MainWindow:
         turn_off = Button(power_frame, text="Turn off", command=self.cam.powerOff)
         turn_off.grid(row=1, column=2)
 
-        power_frame.grid(row=1, column=1, columnspan=3, padx=15, pady=15)
+        power_frame.grid(row=2, column=1, columnspan=3, padx=15, pady=15)
 
         zoom_frame = Frame(main_frame)
 
@@ -63,7 +85,7 @@ class MainWindow:
         zoom_speed_slider.bind("<ButtonRelease-1>", lambda _: resetZoom(zoom_speed_slider))
         zoom_speed_slider.grid(row=3, column=1)
 
-        zoom_frame.grid(row=2, column=1, padx=15, pady=15)
+        zoom_frame.grid(row=3, column=1, padx=15, pady=15)
 
         move_speed_frame = Frame(main_frame)
 
@@ -79,7 +101,7 @@ class MainWindow:
         move_speed_slider = Scale(move_speed_frame, orient=tk.VERTICAL, from_=17, to=1, value=8, command=lambda val: move_speed_val.set(int(float(val))))
         move_speed_slider.grid(row=3, column=1)
 
-        move_speed_frame.grid(row=2, column=2, padx=15, pady=15)
+        move_speed_frame.grid(row=3, column=2, padx=15, pady=15)
 
         pt_frame = Frame(main_frame)
 
@@ -138,7 +160,7 @@ class MainWindow:
         down_right.bind("<ButtonRelease>", stopMoving)
         down_right.grid(row=3, column=3)
 
-        pt_frame.grid(row=2, column=3, padx=15, pady=15)
+        pt_frame.grid(row=3, column=3, padx=15, pady=15)
 
         options_frame = Frame(main_frame)
 
@@ -154,7 +176,7 @@ class MainWindow:
         stop_move_label = Label(options_frame, text="Stop moving on release")
         stop_move_label.grid(row=2, column=2)
 
-        options_frame.grid(row=3, column=1, columnspan=3, padx=15, pady=15)
+        options_frame.grid(row=4, column=1, columnspan=3, padx=15, pady=15)
 
         presets_section_frame = Frame(main_frame)
 
@@ -181,10 +203,10 @@ class MainWindow:
                     self.cam.presetRecall(self.num)
 
         preset_rows = 8
-        preset_num = 1
+        preset_num = 0
         for i in range(preset_rows):
             for j in range(3):
-                gui_preset = Preset(self.cam, preset_num, f"Preset {preset_num}")
+                gui_preset = Preset(self.cam, preset_num, f"Preset {preset_num + 1}")
                 gui_preset.button.grid(row=i+1, column=j+1)
                 preset_num += 1
 
@@ -201,7 +223,7 @@ class MainWindow:
 
         presets_frame.grid(row=2, column=1, pady=10)
                 
-        presets_section_frame.grid(row=4, column=1, columnspan=3, padx=15, pady=15)
+        presets_section_frame.grid(row=5, column=1, columnspan=3, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
