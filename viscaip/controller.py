@@ -1,4 +1,4 @@
-from .viscaexceptions import *
+from .validation import *
 import socket
 import binascii
 
@@ -36,42 +36,6 @@ class Controller:
     def _intToHex(self, number, size = 1):
         return number.to_bytes(size, byteorder='big', signed=True).hex()
 
-    def _zoomPositionValid(self, position):
-        if (0 <= position <= 16384):
-            return True
-        else:
-            raise ZoomPositionError
-
-    def _zoomSpeedValid(self, speed):
-        if (0 <= speed <= 7):
-            return True
-        else:
-            raise ZoomSpeedError
-
-    def _moveSpeedValid(self, speed):
-        if (1 <= speed <= 17):
-            return True
-        else:
-            raise MoveSpeedError
-
-    def _panPosValid(self, pos):
-        if (-1660 <= pos <= 1660):
-            return True
-        else:
-            raise PanPositionError
-
-    def _tiltPosValid(self, pos):
-        if (-374 <= pos <= 1122):
-            return True
-        else:
-            raise TiltPostionError
-
-    def _presetValid(self, preset):
-        if (0 <= preset <= 249):
-            return True
-        else:
-            raise PresetError
-
     def powerOn(self):
         hex_command = "81 01 04 00 02 FF"
         return self._sendToCam(hex_command)
@@ -89,7 +53,7 @@ class Controller:
             hex_command = "81 01 04 07 02 FF"
             return self._sendToCam(hex_command)
         else:
-            if (self._zoomSpeedValid(speed)):
+            if (zoomSpeedValid(speed)):
                 hex_command = f"81 01 04 07 2{speed} FF"
                 return self._sendToCam(hex_command)
 
@@ -98,12 +62,12 @@ class Controller:
             hex_command = "81 01 04 07 03 FF"
             return self._sendToCam(hex_command)
         else:
-            if (self._zoomSpeedValid(speed)):
+            if (zoomSpeedValid(speed)):
                 hex_command = f"81 01 04 07 3{speed} FF"
                 return self._sendToCam(hex_command)
 
     def zoomSet(self, position):
-        if (self._zoomPositionValid(position)):
+        if (zoomPositionValid(position)):
             hex_pos = self._intToHex(position, 2)
             hex_command = f"81 01 04 47 0{hex_pos[0]} 0{hex_pos[1]} 0{hex_pos[2]} 0{hex_pos[3]} FF"
             return self._sendToCam(hex_command)
@@ -113,49 +77,49 @@ class Controller:
         return self._sendToCam(hex_command)
 
     def moveUp(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 03 01 FF"
             return self._sendToCam(hex_command)
 
     def moveDown(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 03 02 FF"
             return self._sendToCam(hex_command)
 
     def moveLeft(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 03 FF"
             return self._sendToCam(hex_command)
 
     def moveRight(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 03 FF"
             return self._sendToCam(hex_command)
 
     def moveUpLeft(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 01 FF"
             return self._sendToCam(hex_command)
 
     def moveUpRight(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 01 FF"
             return self._sendToCam(hex_command)
 
     def moveDownLeft(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 01 02 FF"
             return self._sendToCam(hex_command)
 
     def moveDownRight(self, speed):
-        if (self._moveSpeedValid(speed)):
+        if (moveSpeedValid(speed)):
             hex_speed = self._intToHex(speed)
             hex_command = f"81 01 06 01 {hex_speed} {hex_speed} 02 02 FF"
             return self._sendToCam(hex_command)
@@ -165,9 +129,9 @@ class Controller:
         return self._sendToCam(hex_command)
 
     def moveToAbsolute(self, speed, pan_pos, tilt_pos):
-        if (self._moveSpeedValid(speed) and
-        self._panPosValid(pan_pos) and
-        self._tiltPosValid(tilt_pos)):
+        if (moveSpeedValid(speed) and
+        panPosValid(pan_pos) and
+        tiltPosValid(tilt_pos)):
             hex_speed = self._intToHex(speed)
             hex_pan_pos = self._intToHex(pan_pos, 2)
             hex_tilt_pos = self._intToHex(tilt_pos, 2)
@@ -175,19 +139,47 @@ class Controller:
             return self._sendToCam(hex_command)
 
     def presetReset(self, preset):
-        if (self._presetValid(preset)):
+        if (presetValid(preset)):
             hex_preset = self._intToHex(preset)
             hex_command = f"81 01 04 3F 00 {hex_preset} FF"
             return self._sendToCam(hex_command)
 
     def presetSet(self, preset):
-        if (self._presetValid(preset)):
+        if (presetValid(preset)):
             hex_preset = self._intToHex(preset)
             hex_command = f"81 01 04 3F 01 {hex_preset} FF"
             return self._sendToCam(hex_command)
 
     def presetRecall(self, preset):
-        if (self._presetValid(preset)):
+        if (presetValid(preset)):
             hex_preset = self._intToHex(preset)
             hex_command = f"81 01 04 3F 02 {hex_preset} FF"
+            return self._sendToCam(hex_command)
+
+    def focusStop(self):
+        hex_command = "81 01 04 08 00 FF"
+        return self._sendToCam(hex_command)
+
+    def focusFar(self, speed = None):
+        if speed is None:
+            hex_command = "81 01 04 08 02 FF"
+            return self._sendToCam(hex_command)
+        else:
+            if (focusSpeedValid(speed)):
+                hex_command = f"81 01 04 08 2{speed} FF"
+                return self._sendToCam(hex_command)
+
+    def focusNear(self, speed = None):
+        if speed is None:
+            hex_command = "81 01 04 08 03 FF"
+            return self._sendToCam(hex_command)
+        else:
+            if (focusSpeedValid(speed)):
+                hex_command = f"81 01 04 08 3{speed} FF"
+                return self._sendToCam(hex_command)
+
+    def focusSet(self, position):
+        if (focusPositionValid(position)):
+            hex_pos = self._intToHex(position, 2)
+            hex_command = f"81 01 04 48 0{hex_pos[0]} 0{hex_pos[1]} 0{hex_pos[2]} 0{hex_pos[3]} FF"
             return self._sendToCam(hex_command)

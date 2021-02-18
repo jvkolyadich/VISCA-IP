@@ -27,3 +27,13 @@ class PresetError(BaseException):
     def __init__(self):
         self.message = "Invalid preset. Only presets 0 through 249 are supported"
         super().__init__(self.message)
+
+class FocusSpeedError(BaseException):
+    def __init__(self):
+        self.message = "Focus speed must be between 0 and 7"
+        super().__init__(self.message)
+
+class FocusPositionError(BaseException):
+    def __init__(self):
+        self.message = "Focus position must be between  and "
+        super().__init__(self.message)
