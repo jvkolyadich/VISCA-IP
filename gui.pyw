@@ -204,7 +204,7 @@ class MainWindow:
                 else:
                     self.cam.presetRecall(self.num)
 
-        preset_rows = 12
+        preset_rows = 3
         preset_num = 0
         for i in range(preset_rows):
             for j in range(3):
@@ -226,6 +226,39 @@ class MainWindow:
         presets_frame.grid(row=2, column=1, pady=10)
                 
         presets_section_frame.grid(row=5, column=1, columnspan=3, padx=15, pady=15)
+
+        focus_frame = Frame(main_frame)
+
+        stop_focus_on_release = tk.BooleanVar(focus_frame, True)
+
+        zoom_speed_label = Label(focus_frame, text="Zoom:")
+        zoom_speed_label.grid(row=1, column=1)
+
+        zoom_speed_val = tk.StringVar()
+        zoom_speed_val.set("0")
+
+        zoom_speed_info = Label(focus_frame, textvariable=zoom_speed_val)
+        zoom_speed_info.grid(row=2, column=1)
+
+        def processZoom(speed):
+            if int(zoom_speed_val.get()) != speed:
+                zoom_speed_val.set(speed)
+                if speed > 0:
+                    self.cam.zoomIn(speed)
+                elif speed < 0:
+                    self.cam.zoomOut(speed * -1)
+                else:
+                    self.cam.zoomStop()
+
+        def resetZoom(slider):
+            if stop_focus_on_release.get():
+                slider.set("0")
+
+        zoom_speed_slider = Scale(focus_frame, orient=tk.VERTICAL, from_=7, to=-7, value=0, command=lambda val: processZoom(int(float(val))))
+        zoom_speed_slider.bind("<ButtonRelease-1>", lambda _: resetZoom(zoom_speed_slider))
+        zoom_speed_slider.grid(row=3, column=1)
+
+        zoom_frame.grid(row=3, column=1, padx=15, pady=15)
         
         main_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
