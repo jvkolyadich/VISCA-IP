@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter.ttk import *
 from viscaip.controller import Controller
 
+default_ip = "127.0.0.1"
+
 class MainWindow:
     def __init__(self):
-        self.cam = Controller('127.0.0.1')
+        self.cam = Controller(default_ip)
         self.root = tk.Tk()
         self.root.title("VISCA-IP")
         self.icon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABEElEQVRYR"\
@@ -21,7 +23,7 @@ class MainWindow:
 
         config_frame = Frame(main_frame)
 
-        self.gui_ip_var = tk.StringVar(config_frame, value="192.168.1.129")
+        self.gui_ip_var = tk.StringVar(config_frame, value=default_ip)
         self.gui_port_var = tk.StringVar(config_frame, value="52381")
 
         def connectToCam():
@@ -65,6 +67,8 @@ class MainWindow:
 
         should_set = tk.BooleanVar(presets_section_frame, False)
 
+        original_background = self.root.cget("background")
+
         class Preset():
             def __init__(self, cam, preset_num, name):
                 self.cam = cam
@@ -75,25 +79,25 @@ class MainWindow:
             def preset_action(self):
                 if should_set.get():
                     self.cam.presetSet(self.num)
-                    preset_set_button.configure(background="SystemButtonFace")
+                    preset_set_button.configure(background=original_background)
                     should_set.set(False)
                 else:
                     self.cam.presetRecall(self.num)
 
         preset_rows = 3
-        preset_num = 0
+        preset_cols = 3
         for i in range(preset_rows):
-            for j in range(3):
+            for j in range(preset_cols):
+                preset_num = (i * preset_cols) + j
                 gui_preset = Preset(self.cam, preset_num, f"Preset {preset_num + 1}")
                 gui_preset.button.grid(row=i+1, column=j+1)
-                preset_num += 1
 
         def preset_set(set_button):
             if not should_set.get():
                 set_button.configure(background="#007bd9")
                 should_set.set(True)
             else:
-                set_button.configure(background="SystemButtonFace")
+                set_button.configure(background=original_background)
                 should_set.set(False)
 
         preset_set_button = tk.Button(presets_frame, text="Store position", command=lambda: preset_set(preset_set_button))
